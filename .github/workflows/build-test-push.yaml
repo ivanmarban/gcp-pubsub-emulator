@@ -91,7 +91,7 @@ jobs:
           docker stop $CONTAINER_NAME > /dev/null
 
           echo "Output logs: "
-          cat output.log
+          cat $LOGS_FILE
           
           echo "Verifying log output..."
             if grep -q "Server started, listening on 8085" $LOGS_FILE &&
