@@ -1,0 +1,135 @@
+name: Create and publish a Docker image of GCP PubSub emulator
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  TEST_TAG: ghcr.io/${{ github.repository }}:test
+
+jobs:
+  check-and-compare:
+    name: Check and compare version of Google Cloud SDK
+    runs-on: ubuntu-latest
+    outputs:
+      new-version: ${{ steps.compare-versions.outputs.result }}
+      gcloud-skd-version: ${{ steps.get-latest-tags.outputs.google_cloud_sdk_version }}
+
+    steps:
+      - name: Check out repository code
+        id: check-out
+        uses: actions/checkout@v4
+
+      - name: Get latest tags
+        id: get-latest-tags
+        run: |
+          echo "google_cloud_sdk_version=$(skopeo list-tags docker://google/cloud-sdk \
+            | jq -r '.Tags[] | select(endswith("-emulators"))' | sort -V | tail -n 1 | cut -d '-' -f 1)" >> $GITHUB_OUTPUT
+          echo "gcp_pubsub_emulator_version=$(skopeo list-tags docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} \
+            | jq -r '.Tags[] | select(. != "latest")' | sort -V | tail -n 1)" >> $GITHUB_OUTPUT
+
+      - name: Compare versions
+        id: compare-versions
+        uses: fabriziocacicia/semver-compare-action@v0.1.0
+        with:
+          first: ${{ steps.get-latest-tags.outputs.google_cloud_sdk_version }}
+          second: ${{ steps.get-latest-tags.outputs.gcp_pubsub_emulator_version }}
+
+  buid-test-push:
+    name: Build, Test and Push Docker image
+    if: needs.check-and-compare.outputs.new-version == 'true'
+    runs-on: ubuntu-latest
+    needs: check-and-compare
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Check out repository code
+        id: check-out
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        id: setup-buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build container for tests
+        id: build-test-container
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: ${{ env.TEST_TAG }}
+          build-args: |
+            GOOGLE_CLOUD_SDK_VERSION=${{ needs.check-and-compare.outputs.gcloud-skd-version }}
+
+      - name: Test container
+        id: test-container
+        env:
+          HOST: localhost
+          PORT: 8085
+          SUBSCRIPTION: v1/projects/myproject/subscriptions/mysubscription
+          CONTAINER_NAME: test-container
+          LOGS_FILE: output.log
+        run: |
+          docker run --rm --detach --name $CONTAINER_NAME ${{ env.TEST_TAG }}
+          
+          while ! (docker exec $CONTAINER_NAME bash -c "(echo > /dev/tcp/$HOST/$PORT) >/dev/null 2>&1") ; do
+            echo "Waiting for $HOST:$PORT to become available..."
+            sleep 1
+          done
+  
+          while [ "$(docker exec $CONTAINER_NAME curl -s -o /dev/null -w '%{http_code}' $HOST:$PORT/$SUBSCRIPTION)" -ne 200 ]; do
+            echo "Waiting for $SUBSCRIPTION to become created..."
+            sleep 1
+          done
+  
+          docker logs $CONTAINER_NAME &> $LOGS_FILE
+  
+          docker stop $CONTAINER_NAME > /dev/null
+
+          echo "Output logs: "
+          cat output.log
+          
+          echo "Verifying log output..."
+            if grep -q "Server started, listening on 8085" $LOGS_FILE &&
+              grep -q "\[setup] Topic \[projects/myproject/topics/mytopic] created successfully" $LOGS_FILE &&
+              grep -q "\[setup] Subscription \[projects/myproject/subscriptions/mysubscription] created successfully" $LOGS_FILE; then
+              echo "Logs contains expected output."
+              exit 0
+            else
+              echo "Logs doesn't contains expected output."
+              exit 1
+            fi
+
+      - name: Login to ghcr.io
+        id: docker-login
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: extract-metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=schedule
+            type=semver,pattern={{version}},value=${{ needs.check-and-compare.outputs.gcloud-skd-version }}
+
+      - name: Build and push Docker image
+        id: build-push-container
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          provenance: false
+          build-args: |
+            GOOGLE_CLOUD_SDK_VERSION=${{ needs.check-and-compare.outputs.gcloud-skd-version }}
+          tags: ${{ steps.extract-metadata.outputs.tags }}
+          labels: ${{ steps.extract-metadata.outputs.labels }}
