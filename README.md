@@ -1,9 +1,10 @@
 # gcp-pubsub-emulator
 
-[![Image tags](https://ghcr-badge.egpl.dev/ivanmarban/gcp-pubsub-emulator/tags?trim=major&label=Image%20Tags)](https://github.com/ivanmarban/gcp-pubsub-emulator/pkgs/container/gcp-pubsub-emulator)
-[![Latest image](https://ghcr-badge.egpl.dev/ivanmarban/gcp-pubsub-emulator/latest_tag?trim=major&label=Latest)](https://github.com/ivanmarban/gcp-pubsub-emulator/pkgs/container/gcp-pubsub-emulator)
-[![Image size](https://ghcr-badge.egpl.dev/ivanmarban/gcp-pubsub-emulator/size?trim=major&label=Image%20Size)](https://github.com/ivanmarban/gcp-pubsub-emulator/pkgs/container/gcp-pubsub-emulator)
-[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ivanmarban/gcp-pubsub-emulator/build-test-push.yaml?logo=github&label=Build)](https://github.com/ivanmarban/gcp-pubsub-emulator/actions/workflows/build-test-push.yaml)
+[![Release](https://img.shields.io/github/downloads-pre/ivanmarban/gcp-pubsub-emulator/latest/total?label=release)](https://github.com/ivanmarban/gcp-pubsub-emulator/releases)
+[![Image tags](https://ghcr-badge.egpl.dev/ivanmarban/gcp-pubsub-emulator/tags?trim=major&label=image%20tags)](https://github.com/ivanmarban/gcp-pubsub-emulator/pkgs/container/gcp-pubsub-emulator)
+[![Latest image](https://ghcr-badge.egpl.dev/ivanmarban/gcp-pubsub-emulator/latest_tag?trim=major&label=latest)](https://github.com/ivanmarban/gcp-pubsub-emulator/pkgs/container/gcp-pubsub-emulator)
+[![Image size](https://ghcr-badge.egpl.dev/ivanmarban/gcp-pubsub-emulator/size?trim=major&label=image%20size)](https://github.com/ivanmarban/gcp-pubsub-emulator/pkgs/container/gcp-pubsub-emulator)
+[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ivanmarban/gcp-pubsub-emulator/build-test-push.yaml?logo=github&label=build)](https://github.com/ivanmarban/gcp-pubsub-emulator/actions/workflows/build-test-push.yaml)
 
 A Docker container image of GCP PubSub emulator
 
