@@ -1,6 +1,9 @@
 # gcp-pubsub-emulator
-[![1] ![2] ![3]](https://github.com/ivanmarban/gcp-pubsub-emulator/pkgs/container/gcp-pubsub-emulator)
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ivanmarban/gcp-pubsub-emulator/build-test-push.yaml?logo=github&label=Build)
+
+[![Image tags](https://ghcr-badge.egpl.dev/ivanmarban/gcp-pubsub-emulator/tags?trim=major&label=Image%20Tags)](https://github.com/ivanmarban/gcp-pubsub-emulator/pkgs/container/gcp-pubsub-emulator)
+[![Latest image](https://ghcr-badge.egpl.dev/ivanmarban/gcp-pubsub-emulator/latest_tag?trim=major&label=Latest)](https://github.com/ivanmarban/gcp-pubsub-emulator/pkgs/container/gcp-pubsub-emulator)
+[![Image size](https://ghcr-badge.egpl.dev/ivanmarban/gcp-pubsub-emulator/size?trim=major&label=Image%20Size)](https://github.com/ivanmarban/gcp-pubsub-emulator/pkgs/container/gcp-pubsub-emulator)
+[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ivanmarban/gcp-pubsub-emulator/build-test-push.yaml?logo=github&label=Build)](https://github.com/ivanmarban/gcp-pubsub-emulator/actions/workflows/build-test-push.yaml)
 
 A Docker container image of GCP PubSub emulator
 
@@ -125,9 +128,4 @@ services:
 ```
 
 ## Special Thanks
-This project was inspired by [marcelcorso/gcloud-pubsub-emulator][4] 
-
-[1]: <https://ghcr-badge.egpl.dev/ivanmarban/gcp-pubsub-emulator/tags?trim=major>
-[2]: <https://ghcr-badge.egpl.dev/ivanmarban/gcp-pubsub-emulator/latest_tag?trim=major&label=latest>
-[3]: <https://ghcr-badge.egpl.dev/ivanmarban/gcp-pubsub-emulator/size>
-[4]: <https://github.com/marcelcorso/gcloud-pubsub-emulator>
+This project was inspired by [marcelcorso/gcloud-pubsub-emulator](https://github.com/marcelcorso/gcloud-pubsub-emulator)
