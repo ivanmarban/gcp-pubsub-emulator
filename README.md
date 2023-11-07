@@ -98,7 +98,7 @@ If the default configuration does not meet your needs, you can tune it using env
 ## Examples
 
 ```
-docker run --rm -ti \
+docker run --rm -ti -p 8888:8888 \
     -e PUBSUB_PORT=8888 \
     -e PUBSUB_PROJECT=project1 \
     -e 'PUBSUB_SETUP={"topics":[{"name":"topic1","subscriptions":[{"name":"subscription1"},{"name":"subscription2"}]}]}' \
@@ -115,7 +115,7 @@ services:
     container_name: pubsub
     image: ghcr.io/ivanmarban/gcp-pubsub-emulator:latest
     ports:
-      - "8085:8085"
+      - "8888:8888"
     environment:
       PUBSUB_PORT: 8888
       PUBSUB_PROJECT: project1
