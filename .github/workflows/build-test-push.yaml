@@ -118,7 +118,6 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=schedule
             type=semver,pattern={{version}},value=${{ needs.check-and-compare.outputs.gcloud-skd-version }}
 
       - name: Build and push Docker image
