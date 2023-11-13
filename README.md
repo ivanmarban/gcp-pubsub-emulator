@@ -17,6 +17,7 @@ docker run --rm -ti -p 8085:8085 --name pubsub ghcr.io/ivanmarban/gcp-pubsub-emu
 ```
 
 Or, if you prefer to build it yourself:
+
 ```
 git clone https://github.com/ivanmarban/gcp-pubsub-emulator.git
 cd gcp-pubsub-emulator
@@ -36,6 +37,19 @@ After running the above `docker run` command, the container will start and confi
 - topic: `mytopic`
 - subscription: `mysubscription`
 - emulator listening port: `8085`
+
+Publishing a message:
+
+```
+docker exec pubsub  curl -s -X POST 'http://localhost:8085/v1/projects/myproject/topics/mytopic:publish' \
+    -H 'Content-Type: application/json' \
+    --data '{"messages":[{"attributes":{"attribute1":"value1","attribute2":"value2"},"data":"eyJrZXkiOiAidmFsdWUifQ=="}]}'
+```
+
+- The [publish](https://cloud.google.com/pubsub/docs/reference/rest/v1/projects.topics/publish) API accepts an array of messages
+- The [message](https://cloud.google.com/pubsub/docs/reference/rest/v1/PubsubMessage) payload must be base64-encoded
+
+
 
 ## Configuration
 
