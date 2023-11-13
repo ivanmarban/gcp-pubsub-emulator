@@ -10,7 +10,7 @@ A Docker container image of GCP PubSub emulator
 
 ## Installation
 
-A pre-built Docker container is available from grhc.io:
+A pre-built Docker container is available from ghcr.io:
 
 ```
 docker run --rm -ti -p 8085:8085 --name pubsub ghcr.io/ivanmarban/gcp-pubsub-emulator:latest
@@ -41,7 +41,7 @@ After running the above `docker run` command, the container will start and confi
 Publishing a message:
 
 ```
-docker exec pubsub  curl -s -X POST 'http://localhost:8085/v1/projects/myproject/topics/mytopic:publish' \
+docker exec pubsub curl -s -X POST 'http://localhost:8085/v1/projects/myproject/topics/mytopic:publish' \
     -H 'Content-Type: application/json' \
     --data '{"messages":[{"attributes":{"attribute1":"value1","attribute2":"value2"},"data":"eyJrZXkiOiAidmFsdWUifQ=="}]}'
 ```
